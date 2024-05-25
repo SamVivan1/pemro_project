@@ -1,1 +1,0 @@
-from ambil_data import *

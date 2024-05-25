@@ -1,7 +1,6 @@
-from tampilan import *
-from database import *
+from ambil_data import Ambildata
+import time
+from tampilan import App
 
-createDatabase()
-createTables()
-menu()
+app = App()
 app.mainloop()
