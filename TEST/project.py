@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
 
-NPM = '2304111010054'
+NPM = 'NPM_KLEN'
 URL_SENSOR_READ = 'https://belajar-python-unsyiah.an.r.appspot.com/sensor/read'
 
 # Event untuk menghentikan pengambilan data sensor

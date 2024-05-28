@@ -1,0 +1,2 @@
+
+update.ambildata_berkala()
