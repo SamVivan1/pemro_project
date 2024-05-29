@@ -1,3 +1,20 @@
+"""
+The `App` class is the main entry point of the application. It sets up the main window, including the tabview and the various menu tabs.
+
+The `Messagebox` class provides static methods for displaying different types of message boxes, such as information, error, warning, and question messages.
+
+The `MenuDaftar` class represents the "Daftar ID Tree" tab, which displays a list of all the plant IDs, their latitudes, longitudes, and timestamps.
+
+The `MenuTambah` class represents the "Tambah" tab, which allows the user to add a new plant ID.
+
+The `MenuTampil` class represents the "Tampil" tab, which provides two buttons: one to display a graph for a single plant, and another to display the mean values for all sensors across all plants.
+
+The `SatuTanaman` class is a custom top-level window that is used to display the graph for a single plant. It allows the user to select the plant ID and the sensor type to be displayed.
+
+The `meanTanaman` class is a custom top-level window that is used to display the mean values for all sensors across all plants, within a specified date range.
+
+The `MenuHapus` class represents the "Hapus" tab, which allows the user to delete a plant ID.
+"""
 import customtkinter
 from CTkMessagebox import CTkMessagebox
 from ambil_data.proses import CRUD

@@ -1,3 +1,14 @@
+"""
+This module provides a Database class that manages a SQLite database for storing plant and sensor data.
+
+The Database class has the following methods:
+
+- `__init__(self, db_path="database/database.db")`: Initializes the Database instance with the specified database file path.
+- `createPlantsTable(self)`: Creates or verifies the existence of a 'plants' table in the database, which stores information about plants such as their ID, latitude, longitude, and timestamp of addition.
+- `createSensorDataTable(self)`: Creates or verifies the existence of a 'sensor_data' table in the database, which stores sensor data for each plant, including the plant ID, sensor ID, sensor value, and timestamp.
+- `get_all_id_trees(self)`: Retrieves a list of all unique plant IDs (ID trees) from the 'plants' table.
+- `get_all_plants_data(self)`: Retrieves all the data from the 'plants' table.
+"""
 import sqlite3
 import logging
 

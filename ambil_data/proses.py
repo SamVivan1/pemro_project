@@ -1,3 +1,18 @@
+"""
+The `DatabaseConnection` class provides a context manager for managing a connection to a SQLite database.
+
+The `CRUD` class provides methods for interacting with the database, including:
+- `id_tree_exists`: Checks if a given `id_tree` exists in the `plants` table.
+- `tambah_tanaman`: Adds a new plant record to the `plants` table with a randomly generated latitude and longitude.
+- `tampilkanSensor`: Retrieves all records from the `sensor_data` table.
+- `tampilkanTanaman`: Retrieves all records from the `plants` table.
+- `hapus`: Deletes a plant record from the `plants` table and all associated sensor data from the `sensor_data` table.
+
+The `Grafik` class provides methods for working with sensor data, including:
+- `ambil_rata_rata_sensor`: Calculates the average value for each sensor type over a given time range.
+- `ambil_data_sensor`: Retrieves sensor data for a given `id_tree`, sensor type, and time range.
+- `interpolasi_data_hilang`: Interpolates missing data points at the beginning and end of a sensor data series.
+"""
 import sqlite3
 import datetime as dt
 import random
