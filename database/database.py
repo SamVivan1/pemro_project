@@ -54,8 +54,8 @@ class Database:
             logger.info(f"Retrieved all plants data: {plants}")
             return plants
 
-# if __name__ == "__main__":
-#     db = Database()
-#     db.createPlantsTable()
-#     db.createSensorDataTable()
-#     print(db.get_all_id_trees())
+if __name__ == "__main__":
+    db = Database()
+    db.createPlantsTable()
+    db.createSensorDataTable()
+    print(db.get_all_id_trees())

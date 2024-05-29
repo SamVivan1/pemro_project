@@ -76,6 +76,6 @@ class Takedata:
         except Exception as e:
             logger.error(f"Error saving data: {e}")
 
-# if __name__ == "__main__":
-#     takedata = Takedata()
-#     takedata.ambil_data()
+if __name__ == "__main__":
+    takedata = Takedata()
+    takedata.ambil_data()

@@ -117,7 +117,7 @@ class Grafik:
 
         return timestamps, nilai
 
-
-# db = Grafik()
-# data = db.ambil_data_sensor(1, 0, "2024-05-28 00:00:00", "2024-05-29 23:59:59")
-# print(data)
+if __name__ == "__main__":
+    db = Grafik()
+    data = db.ambil_data_sensor(1, 0, "2024-05-28 00:00:00", "2024-05-29 23:59:59")
+    print(data)

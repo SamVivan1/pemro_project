@@ -8,7 +8,6 @@ from ambil_data.proses import Grafik
 import tkcalendar
 import datetime as dt
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import matplotlib.dates as mdates
 
@@ -163,7 +162,7 @@ class SatuTanaman(customtkinter.CTkToplevel):
                 for sensor_type, label in label_sensor.items():
                     button = customtkinter.CTkButton(master=self.frame, text=label, command=lambda id=data, sn = label, st=sensor_type: self.minta_waktu(id, st, sn))
                     button.pack(pady=5)
-                self.button1 = customtkinter.CTkButton(corner_radius=32, master=self.frame, text="Kembali", command=self.minta_id)
+                self.button1 = customtkinter.CTkButton(corner_radius=32, master=self.frame, fg_color="red",text="Kembali", command=self.minta_id)
                 self.button1.pack(pady=20, padx=10)
             else:
                 pesan.show_error(f"ID {data} tidak ditemukan")
@@ -189,8 +188,8 @@ class SatuTanaman(customtkinter.CTkToplevel):
                 self.end_date_entry = tkcalendar.DateEntry(master=self.frame, date_pattern='yyyy-mm-dd')
                 self.end_date_entry.pack(pady=5)
 
-                self.show_button = customtkinter.CTkButton(corner_radius=32, master=self.frame, text="Tampilkan", command=lambda : self.take_datetime(data, type_sensor, nama_sensor))
-                self.button1 = customtkinter.CTkButton(corner_radius=32, master=self.frame, text="Kembali", command=lambda id = data : self.pilih_type_sensor(id))
+                self.show_button = customtkinter.CTkButton(corner_radius=32, master=self.frame, fg_color="green",text="Tampilkan", command=lambda : self.take_datetime(data, type_sensor, nama_sensor))
+                self.button1 = customtkinter.CTkButton(corner_radius=32, master=self.frame, fg_color="red",text="Kembali", command=lambda id = data : self.pilih_type_sensor(id))
                 self.button1.pack(pady=20, side="left", padx=10)
                 self.show_button.pack(pady=20, side="right", padx=10)
             else:
@@ -383,5 +382,5 @@ class MenuHapus:
 if __name__ == "__main__":
     customtkinter.set_appearance_mode("system")
     customtkinter.set_default_color_theme("blue")
-    # app = App()
-    # app.mainloop()
+    app = App()
+    app.mainloop()
