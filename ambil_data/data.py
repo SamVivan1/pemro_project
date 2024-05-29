@@ -1,42 +1,14 @@
 """
-This module contains the Takedata class which is responsible for fetching sensor data from a remote API and saving it to a local SQLite database.
+Provides a class `Takedata` that fetches sensor data from an API and saves it to a local SQLite database.
 
-Classes:
-    Takedata:
-        This class provides methods for fetching sensor data and saving it to a database.
+The `Takedata` class has the following methods:
 
-        Attributes:
-            npm (int): The NPM (student ID) used for fetching data.
-            sensors (list): A list to store the fetched sensor data.
+- `ambildata(id_tree)`: Fetches sensor data for the given `id_tree` and saves it to the `sensors` list. This method is called periodically by the `ambil_data()` method.
+- `ambil_data()`: Starts a background thread that periodically calls `ambildata()` for all available `id_trees`.
+- `save_data2db(data)`: Saves the provided sensor data to the SQLite database.
 
-        Methods:
-            __init__():
-                Initializes the Takedata object with the NPM and an empty list for sensors.
-
-            ambildata(id_tree):
-                Fetches sensor data for a given tree ID from the remote API and appends it to the sensors list.
-                Also saves the fetched data to the database using the save_data2db method.
-
-            ambil_data():
-                Starts a daemon thread that periodically fetches sensor data for all tree IDs in the database.
-                The data is fetched every 60 seconds.
-
-            save_data2db(data):
-                Saves the given sensor data to the SQLite database.
-
-Usage:
-    To use this module, create an instance of the Takedata class and call the ambil_data method:
-
-    >>> takedata = Takedata()
-    >>> takedata.ambil_data()
-
-    This will start a daemon thread that periodically fetches sensor data and saves it to the database.
-
-Note:
-    This module requires a SQLite database file named "database.db" in the "database" directory.
-    The database should have a table named "sensor_data" with columns "id_tree", "sensors", "value", and "time".
+The script also sets up logging and runs the `ambil_data()` method when executed as the main program.
 """
-
 import datetime as dt
 import json
 from urllib.request import urlopen
