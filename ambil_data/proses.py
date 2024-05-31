@@ -1,18 +1,18 @@
 """
 The `DatabaseConnection` class provides a context manager for managing a connection to a SQLite database.
 
-The `CRUD` class provides methods for interacting with the database, including:
-- `id_tree_exists`: Checks if a given `id_tree` exists in the `plants` table.
-- `tambah_tanaman`: Adds a new plant record to the `plants` table with a randomly generated latitude and longitude.
-- `tampilkanSensor`: Retrieves all records from the `sensor_data` table.
-- `tampilkanTanaman`: Retrieves all records from the `plants` table.
-- `hapus`: Deletes a plant record from the `plants` table and all associated sensor data from the `sensor_data` table.
+The `CRUD` class provides methods for interacting with the `plants` and `sensor_data` tables in the database, including:
+- `id_tree_exists`: Checks if a plant with the given `id_tree` exists in the `plants` table.
+- `tambah_tanaman`: Adds a new plant to the `plants` table with a random latitude and longitude, and the current timestamp.
+- `tampilkanSensor`: Retrieves all rows from the `sensor_data` table.
+- `tampilkanTanaman`: Retrieves all rows from the `plants` table.
+- `hapus`: Deletes a plant from the `plants` table and all associated sensor data from the `sensor_data` table.
 
-The `Grafik` class provides methods for working with sensor data, including:
+The `Grafik` class provides methods for retrieving and processing sensor data from the database, including:
 - `ambil_rata_rata_sensor`: Calculates the average value for each sensor type over a given time range.
 - `ambil_data_sensor`: Retrieves sensor data for a given `id_tree`, sensor type, and time range.
-- `interpolasi_data_hilang`: Interpolates missing data points at the beginning and end of a sensor data series.
 """
+
 import sqlite3
 import datetime as dt
 import random
@@ -107,31 +107,6 @@ class Grafik:
         print(f"Data yang ditemukan: {data}")
         return data
     
-    def interpolasi_data_hilang(timestamps, nilai, waktu_mulai, waktu_akhir):
-        """Interpolasi data untuk mengisi nilai yang hilang di titik awal dan akhir."""
-        timestamps = np.array([mdates.date2num(ts) for ts in timestamps])
-        nilai = np.array(nilai)
-
-        # Mengonversi string waktu ke objek datetime
-        mulai_waktu = mdates.date2num(dt.datetime.strptime(waktu_mulai, '%Y-%m-%d %H:%M:%S'))
-        akhir_waktu = mdates.date2num(dt.datetime.strptime(waktu_akhir, '%Y-%m-%d %H:%M:%S'))
-
-        # Jika timestamps tidak memiliki mulai_waktu atau akhir_waktu tambahkan mereka dengan interpolasi
-        if mulai_waktu not in timestamps:
-            nilai_awal = np.interp(mulai_waktu, timestamps, nilai)
-            timestamps = np.insert(timestamps, 0, mulai_waktu)
-            nilai = np.insert(nilai, 0, nilai_awal)
-
-        if akhir_waktu not in timestamps:
-            nilai_akhir = np.interp(akhir_waktu, timestamps, nilai)
-            timestamps = np.append(timestamps, akhir_waktu)
-            nilai = np.append(nilai, nilai_akhir)
-
-        # konversi kembali timestamps ke datetime tanpa zona waktu
-        timestamps = [mdates.num2date(ts) for ts in timestamps]
-
-        return timestamps, nilai
-
 if __name__ == "__main__":
     db = Grafik()
     data = db.ambil_data_sensor(1, 0, "2024-05-28 00:00:00", "2024-05-29 23:59:59")

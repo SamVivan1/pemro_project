@@ -1,20 +1,23 @@
 """
-The `App` class is the main entry point of the application. It sets up the main window, including the tabview and the various menu tabs.
+The `MainApp` class is the main entry point of the application. It sets up the main window, including the title, size, and background image. The `main()` method creates the main frame and adds the title, subtitle, and a button to enter the application.
 
-The `Messagebox` class provides static methods for displaying different types of message boxes, such as information, error, warning, and question messages.
+The `App` class is responsible for managing the different tabs of the application, including the `MenuTambah`, `MenuDaftar`, `MenuTampil`, and `MenuHapus` tabs.
 
-The `MenuDaftar` class represents the "Daftar ID Tree" tab, which displays a list of all the plant IDs, their latitudes, longitudes, and timestamps.
+The `Messagebox` class provides static methods for displaying different types of message boxes, such as information, error, warning, question, and checkmark messages.
 
-The `MenuTambah` class represents the "Tambah" tab, which allows the user to add a new plant ID.
+The `MenuDaftar` class is responsible for displaying a list of all the plants in the database in a text box. The `load_data()` method retrieves the data from the database and updates the text box.
 
-The `MenuTampil` class represents the "Tampil" tab, which provides two buttons: one to display a graph for a single plant, and another to display the mean values for all sensors across all plants.
+The `MenuTambah` class provides an interface for adding a new plant to the database. The `tambah()` method handles the logic for adding a new plant.
 
-The `SatuTanaman` class is a custom top-level window that is used to display the graph for a single plant. It allows the user to select the plant ID and the sensor type to be displayed.
+The `MenuTampil` class provides an interface for displaying graphs of sensor data for a single plant or the mean of all sensor data for all plants. The `satu_tanaman()` and `show_mean()` methods handle the logic for displaying the respective graphs.
 
-The `meanTanaman` class is a custom top-level window that is used to display the mean values for all sensors across all plants, within a specified date range.
+The `SatuTanaman` class is a custom `CTkToplevel` window that is used to display the graph for a single plant. The `minta_id()`, `pilih_type_sensor()`, `minta_waktu()`, and `grafik_sensor()` methods handle the logic for displaying the graph.
 
-The `MenuHapus` class represents the "Hapus" tab, which allows the user to delete a plant ID.
+The `meanTanaman` class is a custom `CTkToplevel` window that is used to display the mean graph for all plants. The `minta_data()` and `tampilkan_grafik()` methods handle the logic for displaying the graph.
+
+The `MenuHapus` class provides an interface for deleting a plant from the database. The `hapus()` method handles the logic for deleting a plant.
 """
+
 import customtkinter
 from CTkMessagebox import CTkMessagebox
 from ambil_data.proses import CRUD
@@ -28,19 +31,39 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.dates as mdates
 
-class App(customtkinter.CTk):
+
+class MainApp(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.geometry("1024x640")
         self.title("Data Sensor Collector")
-
         self.img1 = ImageTk.PhotoImage(Image.open("assets/images.png"))
-        self.l1 = customtkinter.CTkLabel(master=self, image=self.img1)
+        self.l1 = customtkinter.CTkLabel(master=self, image=self.img1, text="")
         self.l1.pack(padx=1, pady=1, fill="both", expand=True)
+        self.main()
 
-        self.tabview = customtkinter.CTkTabview(master=self.l1, corner_radius=32)
+    def main(self):
+        self.frame = customtkinter.CTkFrame(master=self.l1, corner_radius=32)
+        self.frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.title_label = customtkinter.CTkLabel(master=self.frame, text="Data Sensor Collector Application", corner_radius=32, height=30, font=("Arial", 30, "bold"), text_color="#ccff33")
+        self.title_label.pack(padx=10, pady=30)
+        self.subtitle = customtkinter.CTkLabel(master=self.frame, text="Muhammad Bintang Panji Kusuma\n2304111010054", corner_radius=32, height=30, font=("Arial", 15, "bold"))
+        self.subtitle.pack(padx=10, pady=10)
+        self.button = customtkinter.CTkButton(master=self.frame, text="Masuk", corner_radius=32, command=self.masuk, fg_color="green", hover_color="#066839")
+        self.button.pack(padx=10, pady=100)
+
+    def masuk(self):
+        for widget in self.frame.winfo_children():
+            widget.destroy()
+        self.frame.destroy()
+        self.app = App(self)
+        self.app
+
+class App():
+    def __init__(self, parent):
+        self.parent = parent
+        self.tabview = customtkinter.CTkTabview(master=self.parent.l1, corner_radius=32)
         self.tabview.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-
         self.menu_tambah = MenuTambah(self.tabview)
         self.menu_daftar = MenuDaftar(self.tabview)
         self.menu_tampil = MenuTampil(self.tabview)
@@ -64,7 +87,7 @@ class Messagebox:
 
     @staticmethod
     def show_question(message):
-        return CTkMessagebox(title="Question", message=message, icon="question", option_1="Yes", option_2="No").get()
+        return CTkMessagebox(title="Question", message=message, icon="question", option_1="Delete", option_2="Cancel").get()
 
     @staticmethod
     def show_checkmark(message):
@@ -75,6 +98,8 @@ class MenuDaftar:
         self.tab = parent.add("Daftar ID Tree")
         self.textbox = customtkinter.CTkTextbox(master=self.tab, state="disabled", height=400, width=700)
         self.textbox.pack(padx=10, pady=10)
+        self.button = customtkinter.CTkButton(master=self.tab, text="Refresh", command=self.load_data, corner_radius=32)
+        self.button.pack(padx=10, pady=10)
 
         self.load_data()
 
@@ -113,12 +138,12 @@ class MenuTambah:
             pesan.show_checkmark(f"Berhasil menambahkan data dengan ID: {data}")
             self.entry.delete(0, 'end')
         else:
-            pesan.show_warning("ID tidak boleh kosong")
+            pesan.show_warning("ID tidak boleh kosong atau harus berupa angka")
 
 class MenuTampil:
     def __init__(self, parent):
         self.tab = parent.add("Tampil")
-        self.button1 = customtkinter.CTkButton(corner_radius=32, master=self.tab, text="Grafik 1 Tanaman", command=self.satu_tanaman)
+        self.button1 = customtkinter.CTkButton(corner_radius=32, master=self.tab, text="Grafik 1 Tanaman", command=self.satu_tanaman, width=205, )
         self.button1.pack(padx=10, pady=10)
         self.button2 = customtkinter.CTkButton(corner_radius=32, master=self.tab, text="Mean Semua Sensor Tanaman", command=self.show_mean)
         self.button2.pack(padx=10, pady=10)
@@ -237,9 +262,7 @@ class SatuTanaman(customtkinter.CTkToplevel):
         nilai, timestamps = zip(*data)
         timestamps = [dt.datetime.strptime(ts, '%Y-%m-%d %H:%M:%S') for ts in timestamps]
 
-        # timestamps, nilai = update.interpolasi_data_hilang(timestamps, nilai, waktu_mulai, waktu_akhir)
-
-        colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'orange', 'purple', 'brown']
+        colors = ['b', 'g', 'r', 'c', 'm', 'y', 'brown', 'orange', 'purple', 'brown']
         plt.style.use('dark_background')
         plt.figure(figsize=(10, 5))
         plt.plot(timestamps, nilai, marker='o', linestyle='-', label=nama_sensor, color=colors[sensor_type % len(colors)])
@@ -391,7 +414,7 @@ class MenuHapus:
             pesan.show_warning(f"ID {data} tidak ditemukan")
             return
         
-        if pesan.show_question(f"Apakah anda yakin ingin menghapus ID {data}?") == "Yes":
+        if pesan.show_question(f"Apakah anda yakin ingin menghapus ID {data}?") == "Delete":
             crud.hapus(data)
             pesan.show_checkmark(f"Berhasil menghapus data dengan ID: {data}")
             self.entry.delete(0, 'end')
